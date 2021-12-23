@@ -60,7 +60,6 @@ public class AlarmService extends IntentService {
                             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                             .setUsage(AudioAttributes.USAGE_NOTIFICATION) //key
                             .build();
-//-1 一次震动  else  重复
                     vibrator.vibrate(patern, 0, audioAttributes);
                 }else {
                     vibrator.vibrate(patern, 0);

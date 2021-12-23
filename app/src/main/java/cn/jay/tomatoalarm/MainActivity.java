@@ -16,7 +16,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean isRunning = false;
     private Vibrator vibrator;
     private AlarmService alarmService;
-    public static final long TOMATO_TIME_LENGTH_MILLIS = 5*1000;
+    public static final long TOMATO_TIME_LENGTH_MILLIS = 25*60*1000;
 
 
     @Override
