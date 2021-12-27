@@ -6,14 +6,18 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.preference.Preference;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+
+import java.util.Date;
 
 import cn.jay.tomatoalarm.R;
 
@@ -21,6 +25,7 @@ public class AlarmService extends IntentService {
 
     private CountDownTimer timer;
     private TextView tv_time;
+    private TextView tv_today_times;
     private Button bt_start;
     private Vibrator vibrator;
     private boolean isRunning;
@@ -60,9 +65,28 @@ public class AlarmService extends IntentService {
                             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                             .setUsage(AudioAttributes.USAGE_NOTIFICATION) //key
                             .build();
-                    vibrator.vibrate(patern, 30, audioAttributes);  // 重复一分钟
+                    vibrator.vibrate(patern, 0, audioAttributes);  // 重复一分钟
                 }else {
-                    vibrator.vibrate(patern, 30);
+                    vibrator.vibrate(patern, 0);
+                }
+
+                Date date = new Date();
+                String todayStr = ""+date.getYear()+date.getMonth()+date.getDate();
+                @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = context.getSharedPreferences("data", Context.MODE_PRIVATE).edit();
+                SharedPreferences sp = context.getSharedPreferences("data", Context.MODE_PRIVATE);
+                String dateOfDate = sp.getString("date", "");
+                if(!todayStr.equals(dateOfDate)){
+                    editor.putString("date", todayStr);
+                    editor.putInt("finish_times", 1);
+                    editor.apply();
+                    tv_today_times.setText("今日完成1次");
+                }
+                else{
+                    int times = sp.getInt("finish_times", 0);
+                    times++;
+                    tv_today_times.setText("今日完成"+times+"次");
+                    editor.putInt("finish_times", times);
+                    editor.apply();
                 }
             }
         };
@@ -83,6 +107,10 @@ public class AlarmService extends IntentService {
 
     public void setBt_start(Button bt_start) {
         this.bt_start = bt_start;
+    }
+
+    public void setTv_today_times(TextView tv_today_times) {
+        this.tv_today_times = tv_today_times;
     }
 
     public void setContext(Context context) {
