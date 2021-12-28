@@ -58,6 +58,7 @@ public class AlarmService extends IntentService {
 
             @Override
             public void onFinish() {
+                tv_time.setText("" + TOMATO_TIME_LENGTH_MILLIS/1000/60 + ":00");
                 long[] patern = {0,1000,1000};
                 AudioAttributes audioAttributes = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
